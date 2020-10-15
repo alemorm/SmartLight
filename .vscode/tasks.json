@@ -15,7 +15,7 @@
       {
         "label": "Key Handler Anonymize",
         "type": "shell",
-        "command": "${workspaceFolder}/keyHandler -a"
+        "command": "${workspaceFolder}/keyHandler.sh -a"
       },
       {
           "label": "Git Pull",

@@ -2,8 +2,6 @@
 
 ## Smart living room lamp that turns on when the room gets dark
 
----
-
 ### <div align="center">**Project Overview**
 
 ![Project Overview][overview]
@@ -12,13 +10,7 @@ The ESP32 Microcontroller measures the light in the living room as well as the c
 
 ## ESP32 Setup
 
----
-
 There are two ESP32 circuit diagrams that reflect the testing and the final deployment circuits. The difference between the two being the presence of an LED that represents the HTTP request being sent.
-
-### <div align="center">**Test Circuit**
-
-![LDR Test Circuit][testcircuit]
 
 ### <div align="center">**Final Circuit**
 
@@ -30,28 +22,22 @@ There are two ESP32 circuit diagrams that reflect the testing and the final depl
 
 ## Code Development
 
----
-
 - **Host Device** = Windows 10 desktop running [Windows Subsystem for Linux (v1)][wsl] with [Ubuntu 18.04.4 LTS][ubuntu]
 - **Embedded Code IDE** = [Arduino IDE (v1.8.13)][arduino]
 - **Host Code IDE** = [VSCode (v1.50.0)][vscode]
 
 ## Materials
 
----
-
 - **[ESP32]** (Affordable microcontroller with bluetooth and WiFi networking capabilities)
 - **[WeMo Smart Plug][wemoplug]** (Remote-controlled current relay that intefaces with IFTTT)
 - **Photoresistor** (Simple and cheap light dependent resistor)
 - **Jumper Wires**
-- **Breadboard**
-- **Power supply** (Standard 5V DC power supply with micro-USB connection for ESP32)
+- **Small Breadboard**
+- **5V DC Power supply** (Standard 5V DC power supply with micro-USB connection for ESP32)
 - **Resistors** (Specifically 10kΩ and 100Ω, present in many kits)
 - **LED**
 
 ## Getting Started
-
----
 
 To replicate this project, follow these steps:
 
@@ -64,37 +50,39 @@ To replicate this project, follow these steps:
 - Create an [IFTTT] account
   
   - Connect a [Webhook] service to your account
-    - Click on *Documentation* after you added the webhook and copy the key value within the double quotes next to the `iftttKey` in the `auth.keys` file
+    - Click on **Documentation** after you added the webhook and copy the key value within the double quotes next to the `iftttKey` in the `auth.keys` file
 
   - Connect a [WeMo] smart plug to your account
   
-  - Create the following applet:
-    - **If This** = Search and select Webhooks
+  - Create the following IFTTT applet:
+    - **If This** -> Search and select Webhooks
       - Under event name write `lamp_on`
-    - **Then That** = Search and select WeMo Smart Plug
+    - **Then That** -> Search and select WeMo Smart Plug
       - Select the `Turn on` action
 
-  - Create the second following applet:
-    - **If This** = Search and select Webhooks
+  - Create the second following IFTTT applet:
+    - **If This** -> Search and select Webhooks
       - Under event name write `lamp_off`
-    - **Then That** = Search and select WeMo Smart Plug
+    - **Then That** -> Search and select WeMo Smart Plug
       - Select the `Turn off` action
 
 - Make the utility script [`keyHandler.sh`] executable by running:
   - `chmod +x keyHandler.sh`
-  - Run the script by:
+  - Then, run the script by:
     - `keyHandler.sh -b`
-    - You should notice the WiFi and IFTTT Key information appear in the `TimeLightClient.ino` source file
-  - **IMPORTANT NOTE**: Make sure to run the `keyHandler.sh -b` before 
+    - You should notice the WiFi and IFTTT Key information appear in the [`TimeLightClient`] source file
+  - **IMPORTANT NOTE**: Make sure to run `keyHandler.sh -b` before committing any changes to ensure that no sensitive information is being tracked
   
 - Download and install the [Arduino IDE][arduino] (can be any PC/Mac/Linux OS version):
 
 - Open the Arduino IDE and follow [this tutorial][esp32tutorial] to add the ESP32
   - This specific project used the NodeMCU-32S variant of the ESP32 but make sure to check which ESP32 variant you are using
 
-- Follow the [circuit schematics][testcircuit] to set up the light-sensing circuit.
+- Follow these circuit schematics to set up the testing light-sensing circuit.
 
-- Once the Arduino IDE has been configured to use the ESP32S, open the [`TimeLightClient.ino`] source file on the Arduino IDE and upload the code to the board (making sure the debug_var is set to 1 to see the serial output).
+![LDR Test Circuit][testcircuit]
+
+- Once the Arduino IDE has been configured to use the ESP32S, open the [`TimeLightClient`] source file on the Arduino IDE and upload the code to the board (making sure the debug_var is set to 1 to see the serial output).
   - Once the code is done compiling and uploading, open the Serial Monitor under **Tools>Serial Monitor** and monitor the light and date/time values.
 
 <!-- Links -->
@@ -113,6 +101,6 @@ To replicate this project, follow these steps:
 [`auth.keys_template`]: auth.keys_template
 [`keyHandler.sh`]: keyHandler.sh
 [esp32tutorial]: https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
-[`TimeLightClient.ino`]: scripts/TimeLightClient/TimeLightClient.ino
+[`TimeLightClient`]: scripts/TimeLightClient/TimeLightClient.ino
 [ESP32]: https://www.espressif.com/en/products/socs/esp32
 [wemoplug]: https://www.belkin.com/us/p/P-F7C063/

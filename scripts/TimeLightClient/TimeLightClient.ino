@@ -9,7 +9,7 @@
 const int debugVar = 1;
 
 /* WiFi info */
-// Name of 2.4GHz wireless network
+// Name of 2.4GHz wireless network, not included for security reasons
 const char* wifiName =
 // WiFi password, not included for security reasons
 const char* wifiKey =
