@@ -60,6 +60,8 @@ void setup(){
   // Define baud rate for serial communication
   Serial.begin(9600);
 
+  
+
   // Test LED code for debugging
   if (debugVar) {
     // Set up the LED pin to be an output.
@@ -166,40 +168,40 @@ void returnLocalTime(char timeBuffer[3]){
 
 // Function that sends the HTTP POST request to IFTTT to triggger services
 void httpQuery(const char *eventType) {
-    // Initialize the HTTP structure variable
-    HTTPClient http;
-    // Initialize the URL string size variable
-    const int strSize = 100;
-    // Initialize the URL string variable
-    char httpURL[strSize];
-    // Set all the bytes in the created array to zero
-    memset(httpURL, 0, strSize);
-    // Create the URL from the components
-    httpConcat(httpURL, strSize, iftttURL, eventType, iftttKey);
-    // Specify destination for HTTP request
-    http.begin(httpURL);
-    // Specify content-type header
-    http.addHeader("Content-Type", "text/plain");
-    // Send the actual POST request
-    int httpResponseCode = http.POST("POSTING from ESP32");
+  // Initialize the HTTP structure variable
+  HTTPClient http;
+  // Initialize the URL string size variable
+  const int strSize = 100;
+  // Initialize the URL string variable
+  char httpURL[strSize];
+  // Set all the bytes in the created array to zero
+  memset(httpURL, 0, strSize);
+  // Create the URL from the components
+  httpConcat(httpURL, strSize, iftttURL, eventType, iftttKey);
+  // Specify destination for HTTP request
+  http.begin(httpURL);
+  // Specify content-type header
+  http.addHeader("Content-Type", "text/plain");
+  // Send the actual POST request
+  int httpResponseCode = http.POST("POSTING from ESP32");
 
-    if (debugVar) {
-      // Print the URL for debugging
-      Serial.print("URL = ");
-      Serial.println(httpURL);
-      if (httpResponseCode > 0){
-        // Get the response to the request
-        String response = http.getString();
-        // Print return code
-        Serial.println(httpResponseCode);
-        // Print request response
-        Serial.println(response);
-      } else {
-        Serial.print("Error on sending POST: ");
-        // Print return code
-        Serial.println(httpResponseCode);
-      }
+  if (debugVar) {
+    // Print the URL for debugging
+    Serial.print("URL = ");
+    Serial.println(httpURL);
+    if (httpResponseCode > 0){
+      // Get the response to the request
+      String response = http.getString();
+      // Print return code
+      Serial.println(httpResponseCode);
+      // Print request response
+      Serial.println(response);
+    } else {
+      Serial.print("Error on sending POST: ");
+      // Print return code
+      Serial.println(httpResponseCode);
     }
+  }
 }
 
 // Function that concatenates the HTTP URL before sending POST request

@@ -12,7 +12,7 @@ BOLD=`tput bold`
 REV=`tput smso`
 
 # Initial variables
-srcFile="${SCRIPT_FULL_PATH}/scripts/TimeLightClient/TimeLightClient.ino"
+srcFile="${SCRIPT_FULL_PATH}/src/TimeLightClient/TimeLightClient.ino"
 wifiNameVar="wifiName"
 wifikeyVar="wifiKey"
 iftttkeyVar="iftttKey"

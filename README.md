@@ -10,7 +10,7 @@ The ESP32 Microcontroller measures the light in the living room as well as the c
 
 ## ESP32 Setup
 
-There are two ESP32 circuit diagrams that reflect the testing and the final deployment circuits. The difference between the two being the presence of an LED that represents the HTTP request being sent.
+There are two ESP32 circuit diagrams that reflect the testing and the final deployment circuits. The difference between the two being the presence of an LED that represents the HTTP request being sent. Here you can see the final version of the circuit:
 
 ### <div align="center">**Final Circuit**
 
@@ -29,12 +29,12 @@ There are two ESP32 circuit diagrams that reflect the testing and the final depl
 ## Materials
 
 - **[ESP32]** (Affordable microcontroller with bluetooth and WiFi networking capabilities)
-- **[WeMo Smart Plug][wemoplug]** (Remote-controlled current relay that intefaces with IFTTT)
+- **[WeMo Smart Plug][wemoplug]** (Network-controlled current relay that interfaces with IFTTT)
 - **Photoresistor** (Simple and cheap light dependent resistor)
 - **Jumper Wires**
 - **Small Breadboard**
 - **5V DC Power supply** (Standard 5V DC power supply with micro-USB connection for ESP32)
-- **Resistors** (Specifically 10kΩ and 100Ω, present in many kits)
+- **Resistors** (Specifically 10kΩ and 100Ω, present in many electronic kits)
 - **LED**
 
 ## Getting Started
@@ -101,6 +101,6 @@ To replicate this project, follow these steps:
 [`auth.keys_template`]: auth.keys_template
 [`keyHandler.sh`]: keyHandler.sh
 [esp32tutorial]: https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
-[`TimeLightClient`]: scripts/TimeLightClient/TimeLightClient.ino
+[`TimeLightClient`]: src/TimeLightClient/TimeLightClient.ino
 [ESP32]: https://www.espressif.com/en/products/socs/esp32
 [wemoplug]: https://www.belkin.com/us/p/P-F7C063/
