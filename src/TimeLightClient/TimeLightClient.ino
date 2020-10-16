@@ -39,7 +39,7 @@ int readDelay = 500;
 // Number of light samples per average
 int sampleNum = 600; /*NOTE* 1,000 or more integer array elements cause stack overflow on ESP32 */
 // Light intensity threshold to turn lamp off, it should be calibrated to desired brightness
-int lightIntensity = 300;
+int lightIntensity = 350;
 
 /* Time Server Information */
 // Google's public NTP server
@@ -186,7 +186,7 @@ void getKeys(char *wName, char *wKey, char *iKey) {
 
   if (debugVar) {
     // Check if the Serial Peripheral Interface Flash File System (SPIFFS) was mounted
-    if(!SPIFFS.begin(true)){
+    if (!SPIFFS.begin(true)) {
       Serial.println("An Error has occurred while mounting SPIFFS");
     }
   }
@@ -195,7 +195,7 @@ void getKeys(char *wName, char *wKey, char *iKey) {
   fileDescriptor = SPIFFS.open(keyFile, "r");
 
   // Continually read bytes in the auth.keys file
-  while(fileDescriptor.available()){
+  while (fileDescriptor.available()) {
     // Read 1 character in the auth.keys file
     char readChar = fileDescriptor.read();
     // When the first double quote is encountered we have the first key
