@@ -243,7 +243,7 @@ void httpQuery(const char *eventType) {
       Serial.println(httpURL);
       // Get the response to the request
       String response = http.getString();
-      Serial.print("Error on sending POST: ");
+      Serial.print("HTTP POST response code: ");
       // Print return code
       Serial.println(httpResponseCode);
     }
