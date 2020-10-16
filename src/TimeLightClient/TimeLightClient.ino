@@ -128,7 +128,7 @@ void loop() {
     if (checkoffPrevious) {
       if (debugVar) {
         // Turn off LED
-        digitalWrite (ledPin, LOW);
+        digitalWrite(ledPin, LOW);
       }
       checkonPrevious = 1;
       checkoffPrevious = 0;
@@ -140,7 +140,7 @@ void loop() {
     if (lightAverage > lightIntensity && checkoffPrevious && !checkonPrevious) {
       if (debugVar) {
         // Turn off LED
-        digitalWrite (ledPin, LOW);
+        digitalWrite(ledPin, LOW);
       }
       checkonPrevious = 1;
       checkoffPrevious = 0;
@@ -150,7 +150,7 @@ void loop() {
     else if (lightAverage <= lightIntensity && checkonPrevious && !checkoffPrevious) {
       if (debugVar) {
         // Turn on LED
-        digitalWrite (ledPin, HIGH);
+        digitalWrite(ledPin, HIGH);
       }
       checkonPrevious = 0;
       checkoffPrevious = 1;
