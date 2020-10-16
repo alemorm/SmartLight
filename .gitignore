@@ -1,3 +1,5 @@
 ~*
 *pptx
 auth.keys
+logs/
+.vscode/launch.json

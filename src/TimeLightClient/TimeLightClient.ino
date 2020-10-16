@@ -3,22 +3,29 @@
 #include <string.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "SPIFFS.h"
 #include "time.h"
 
 /* Debug flag to print useful output, set to 0 for final deployment */
 const int debugVar = 1;
 
+/* Key Authentication Parameters*/
+// File that contains the authentication information for WiFI and IFTTT
+const char* keyFile = "/auth.keys";
+// Line width limit for auth.keys file
+const int lineWidth = 512;
+
 /* WiFi info */
-// Name of 2.4GHz wireless network, not included for security reasons
-const char* wifiName =
-// WiFi password, not included for security reasons
-const char* wifiKey =
+// Name of 2.4GHz wireless network, read from "auth.keys" for security reasons
+char wifiName[lineWidth];
+// WiFi password, read from "auth.keys" for security reasons
+char wifiKey[lineWidth];
 
 /* IFTTT Authentication */
 // First part of the IFTTT webhook URL
 const char* iftttURL = "https://maker.ifttt.com/trigger";
-// Unique IFTTT key, not included for security reasons
-const char* iftttKey =
+// Unique IFTTT key, read from "auth.keys" for security reasons
+char iftttKey[lineWidth];
 
 /* Pinout parameters */
 // ADC1 input-only pin independent of WiFi
@@ -31,7 +38,7 @@ const int ledPin = 32;
 int readDelay = 500;
 // Number of light samples per average
 int sampleNum = 600; /*NOTE* 1,000 or more integer array elements cause stack overflow on ESP32 */
-// Light intensity threshold to turn lamp off, it should be calibrated
+// Light intensity threshold to turn lamp off, it should be calibrated to desired brightness
 int lightIntensity = 300;
 
 /* Time Server Information */
@@ -46,11 +53,13 @@ const int daylightOffset = 3600;
 // Variable that records last time the lamp was turned on
 int checkonPrevious = 1;
 // Variable that records last time the lamp was turned off
-int checkoffPrevious = 1;
+int checkoffilePointerrevious = 1;
 
 /* Function Initializations */
 // Function that returns time and date info from NTP server
-void returnLocalTime(char timeBuffer[3]);
+void returnLocalTime(char *timeBuffer);
+// Function that retrieves the authentication keys from the auth.keys file
+void getKeys(char *wifiName, char *wifiKey, char *iftttKey); 
 // Function that sends the HTTP POST request to IFTTT to triggger services
 void httpQuery(const char *eventType);
 // Function that concatenates the HTTP URL before sending POST request
@@ -59,8 +68,9 @@ void httpConcat(char *httpBuffer, const int bufferLength, const char *s1, const 
 void setup(){  
   // Define baud rate for serial communication
   Serial.begin(9600);
-
   
+  // Retrieve keys from auth.keys file
+  getKeys(wifiName, wifiKey, iftttKey);
 
   // Test LED code for debugging
   if (debugVar) {
@@ -73,15 +83,14 @@ void setup(){
 
   // Delay before connecting to WiFi
   delay(4000);
+  // Connect to WiFi
   WiFi.begin(wifiName, wifiKey);
-  if (debugVar) {
-    while (WiFi.status() != WL_CONNECTED) { //Check for the connection
-      delay(1000);
-      Serial.println("Connecting to WiFi..");
-    }
-    Serial.println("Connected to the WiFi network");
+  while (WiFi.status() != WL_CONNECTED) { //Check for the connection
+    delay(1000);
+    Serial.println("Connecting to WiFi..");
   }
-  
+  Serial.println("Connected to the WiFi network");
+    
   // Initialize the NTP server protocol
   configTime(gmtOffset, daylightOffset, ntpServer);
 }
@@ -93,19 +102,19 @@ void loop() {
   
   // Collect sampleNum number of samples to averageS
   for (int i=0; i<sampleNum; i++) {
-      // Read the current light levels
-      lightSamples[i] = analogRead(sensorPin);
-      lightAverage += lightSamples[i];
-      delay(readDelay);
+    // Read the current light levels
+    lightSamples[i] = analogRead(sensorPin);
+    lightAverage += lightSamples[i];
+    delay(readDelay);
   }
 
   // Calculate the average value of the light samples
   lightAverage /= sampleNum;
 
   if (debugVar) {
-    // Print Light Values
-    Serial.print("Light Value = ");
-    Serial.println(lightAverage);
+  // Print Light Values
+  Serial.print("Light Value = ");
+  Serial.println(lightAverage);
   }
 
   // Get current hour from NTP server
@@ -116,42 +125,42 @@ void loop() {
   // Turn off lamp from 11:00pm to 8:00am
   if ((hourVar >= 23 || hourVar <= 8)) {
     // Check if lamp is off, and if not, turn it off
-    if (checkoffPrevious) {
+    if (checkoffilePointerrevious) {
       if (debugVar) {
         // Turn off LED
         digitalWrite (ledPin, LOW);
       }
       checkonPrevious = 1;
-      checkoffPrevious = 0;
+      checkoffilePointerrevious = 0;
       httpQuery("lamp_off");
     }
   }
   else {
-      // Turn off lamp when light intensity surpasses a threshold and is not off
-      if (lightAverage > lightIntensity && checkoffPrevious) {
-        if (debugVar) {
-          // Turn off LED
-          digitalWrite (ledPin, LOW);
-        }
-        checkonPrevious = 1;
-        checkoffPrevious = 0;
-        httpQuery("lamp_off");
+    // Turn off lamp when light intensity surpasses a threshold and is not off
+    if (lightAverage > lightIntensity && checkoffilePointerrevious) {
+      if (debugVar) {
+        // Turn off LED
+        digitalWrite (ledPin, LOW);
       }
-      // Turn on lamp when light intensity falls below a threshold and is not on
-      else if (lightAverage <= lightIntensity && checkonPrevious) {
-        if (debugVar) {
-          // Turn on LED
-          digitalWrite (ledPin, HIGH);
-        }
-        checkonPrevious = 0;
-        checkoffPrevious = 1;
-        httpQuery("lamp_on");
-      }   
+      checkonPrevious = 1;
+      checkoffilePointerrevious = 0;
+      httpQuery("lamp_off");
+    }
+    // Turn on lamp when light intensity falls below a threshold and is not on
+    else if (lightAverage <= lightIntensity && checkonPrevious) {
+      if (debugVar) {
+        // Turn on LED
+        digitalWrite (ledPin, HIGH);
+      }
+      checkonPrevious = 0;
+      checkoffilePointerrevious = 1;
+      httpQuery("lamp_on");
+    }   
   }
 }
 
 // Function that returns time and date info from NTP server
-void returnLocalTime(char timeBuffer[3]){
+void returnLocalTime(char *timeBuffer){
   // Initialize the time structure variable
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -166,6 +175,47 @@ void returnLocalTime(char timeBuffer[3]){
   strftime(timeBuffer,3, "%H", &timeinfo);
 }
 
+// Function that retrieves the authentication keys from the auth.keys file
+void getKeys(char *wifiName, char *wifiKey, char *iftttKey) {
+  // File descriptor for auth.keys
+  File fileDescriptor;
+  // Match variable for the double quotes enclosing each key
+  char doubleQuote = '"';
+  // Match counter for the number of keys enclosed in double quotes
+  int matchCount = 0;  
+
+  if (debugVar) {
+    // Check if the Serial Peripheral Interface Flash File System (SPIFFS) was mounted
+    if(!SPIFFS.begin(true)){
+      Serial.println("An Error has occurred while mounting SPIFFS");
+    }
+  }
+
+  // Open key authentication files
+  fileDescriptor = SPIFFS.open(keyFile, "r");
+
+  // Continually read bytes in the auth.keys file
+  while(fileDescriptor.available()){
+    // Read 1 character in the auth.keys file
+    char readChar = fileDescriptor.read();
+    // When the first double quote is encountered we have the first key
+    if (readChar == doubleQuote) {
+      matchCount++;
+    } else {
+      // Odd values for matchCount represent a new key value
+      /* Key strings are constructed by dereferencing the char array pointer
+      and post-incrementing the pointer address after assignment */
+      if (matchCount == 1) {
+        *(wifiName++) = readChar;
+      } else if (matchCount == 3) {
+        *(wifiKey++) = readChar;
+      } else if (matchCount == 5) {
+        *(iftttKey++) = readChar;
+      }
+    }
+  }
+}
+
 // Function that sends the HTTP POST request to IFTTT to triggger services
 void httpQuery(const char *eventType) {
   // Initialize the HTTP structure variable
@@ -174,6 +224,8 @@ void httpQuery(const char *eventType) {
   const int strSize = 100;
   // Initialize the URL string variable
   char httpURL[strSize];
+  // Initialize the HTTP response code variable
+  int httpResponseCode = 0;
   // Set all the bytes in the created array to zero
   memset(httpURL, 0, strSize);
   // Create the URL from the components
@@ -182,25 +234,21 @@ void httpQuery(const char *eventType) {
   http.begin(httpURL);
   // Specify content-type header
   http.addHeader("Content-Type", "text/plain");
-  // Send the actual POST request
-  int httpResponseCode = http.POST("POSTING from ESP32");
-
-  if (debugVar) {
-    // Print the URL for debugging
-    Serial.print("URL = ");
-    Serial.println(httpURL);
-    if (httpResponseCode > 0){
+  // Send the actual POST request until it succeeds
+  while (httpResponseCode <= 0) {
+    httpResponseCode = http.POST("POSTING from ESP32");
+    if (debugVar) {
+      // Print the URL for debugging
+      Serial.print("URL = ");
+      Serial.println(httpURL);
       // Get the response to the request
       String response = http.getString();
-      // Print return code
-      Serial.println(httpResponseCode);
-      // Print request response
-      Serial.println(response);
-    } else {
       Serial.print("Error on sending POST: ");
       // Print return code
       Serial.println(httpResponseCode);
     }
+    // Small delay before sending each POST request to balance the server load
+    delay(readDelay);
   }
 }
 

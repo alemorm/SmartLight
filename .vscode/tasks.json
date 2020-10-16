@@ -4,20 +4,6 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "Key Handling Restore",
-        "type": "shell",
-        "command": "${workspaceFolder}/keyHandler.sh -b",
-        "group": {
-            "kind": "test",
-            "isDefault": true
-        }
-      },
-      {
-        "label": "Key Handler Anonymize",
-        "type": "shell",
-        "command": "${workspaceFolder}/keyHandler.sh -a"
-      },
-      {
           "label": "Git Pull",
           "type": "shell",
           "command": "git pull"
@@ -39,7 +25,6 @@
           "dependsOrder": "sequence",
           "dependsOn": [
               "Git Pull",
-              "Key Handler Anonymize",
               "Git Add All",
               "Git Commit All"
           ]
