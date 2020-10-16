@@ -57,13 +57,13 @@ int checkoffPrevious = 1;
 
 /* Function Initializations */
 // Function that returns time and date info from NTP server
-void returnLocalTime(char *timeBuffer);
+void localTime(char *timeBuffer);
 // Function that retrieves the authentication keys from the auth.keys file
 void getKeys(char *wifiName, char *wifiKey, char *iftttKey); 
 // Function that sends the HTTP POST request to IFTTT to triggger services
 void httpQuery(const char *eventType);
 // Function that concatenates the HTTP URL before sending POST request
-void httpConcat(char *httpBuffer, const int bufferLength, const char *s1, const char *s2, const char *s3); 
+void httpConcat(char *httpBuffer, const int bufferLength, const char *mURL, const char *eType, const char *iKey); 
 
 void setup(){  
   // Define baud rate for serial communication
@@ -100,7 +100,7 @@ void loop() {
   double lightAverage = 0;
   char timeHour[3];
   
-  // Collect sampleNum number of samples to averageS
+  // Collect sampleNum number of samples to average
   for (int i=0; i<sampleNum; i++) {
     // Read the current light levels
     lightSamples[i] = analogRead(sensorPin);
@@ -118,7 +118,7 @@ void loop() {
   }
 
   // Get current hour from NTP server
-  returnLocalTime(timeHour);
+  localTime(timeHour);
   // Convert hour value from char to int
   hourVar = atoi(timeHour);
 
@@ -160,7 +160,7 @@ void loop() {
 }
 
 // Function that returns time and date info from NTP server
-void returnLocalTime(char *timeBuffer){
+void localTime(char *timeBuffer){
   // Initialize the time structure variable
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -253,7 +253,7 @@ void httpQuery(const char *eventType) {
 }
 
 // Function that concatenates the HTTP URL before sending POST request
-void httpConcat(char *httpBuffer, const int bufferLength, const char *s1, const char *s2, const char *s3) {
+void httpConcat(char *httpBuffer, const int bufferLength, const char *mURL, const char *eType, const char *iKey) {
     // Format copy the three strings into the input string buffer
-    snprintf(httpBuffer, bufferLength, "%s/%s/%s", s1, s2, s3);
+    snprintf(httpBuffer, bufferLength, "%s/%s/%s", mURL, eType, iKey);
 }
