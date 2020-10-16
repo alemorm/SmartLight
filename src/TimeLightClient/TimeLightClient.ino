@@ -59,7 +59,7 @@ int checkoffPrevious = 1;
 // Function that returns time and date info from NTP server
 void localTime(char *timeBuffer);
 // Function that retrieves the authentication keys from the auth.keys file
-void getKeys(char *wifiName, char *wifiKey, char *iftttKey); 
+void getKeys(char *wName, char *wKey, char *iKey); 
 // Function that sends the HTTP POST request to IFTTT to triggger services
 void httpQuery(const char *eventType);
 // Function that concatenates the HTTP URL before sending POST request
@@ -176,7 +176,7 @@ void localTime(char *timeBuffer){
 }
 
 // Function that retrieves the authentication keys from the auth.keys file
-void getKeys(char *wifiName, char *wifiKey, char *iftttKey) {
+void getKeys(char *wName, char *wKey, char *iKey) {
   // File descriptor for auth.keys
   File fileDescriptor;
   // Match variable for the double quotes enclosing each key
@@ -206,11 +206,11 @@ void getKeys(char *wifiName, char *wifiKey, char *iftttKey) {
       /* Key strings are constructed by dereferencing the char array pointer
       and post-incrementing the pointer address after assignment */
       if (matchCount == 1) {
-        *(wifiName++) = readChar;
+        *(wName++) = readChar;
       } else if (matchCount == 3) {
-        *(wifiKey++) = readChar;
+        *(wKey++) = readChar;
       } else if (matchCount == 5) {
-        *(iftttKey++) = readChar;
+        *(iKey++) = readChar;
       }
     }
   }
