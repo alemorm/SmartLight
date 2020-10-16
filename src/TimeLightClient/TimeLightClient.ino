@@ -53,7 +53,7 @@ const int daylightOffset = 3600;
 // Variable that records last time the lamp was turned on
 int checkonPrevious = 1;
 // Variable that records last time the lamp was turned off
-int checkoffPrevious = 1;
+int checkoffPrevious = 0;
 
 /* Function Initializations */
 // Function that returns time and date info from NTP server
@@ -137,7 +137,7 @@ void loop() {
   }
   else {
     // Turn off lamp when light intensity surpasses a threshold and is not off
-    if (lightAverage > lightIntensity && checkoffPrevious) {
+    if (lightAverage > lightIntensity && checkoffPrevious && !checkonPrevious) {
       if (debugVar) {
         // Turn off LED
         digitalWrite (ledPin, LOW);
@@ -147,7 +147,7 @@ void loop() {
       httpQuery("lamp_off");
     }
     // Turn on lamp when light intensity falls below a threshold and is not on
-    else if (lightAverage <= lightIntensity && checkonPrevious) {
+    else if (lightAverage <= lightIntensity && checkonPrevious && !checkoffPrevious) {
       if (debugVar) {
         // Turn on LED
         digitalWrite (ledPin, HIGH);
