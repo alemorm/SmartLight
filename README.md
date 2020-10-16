@@ -68,10 +68,10 @@ To replicate this project, follow these steps:
   
 - Download and install the [Arduino IDE][arduino] (can be any PC/Mac/Linux OS version):
 
-- Open the Arduino IDE and follow [this tutorial][esp32tutorial] to add the ESP32
+- Open the Arduino IDE and follow [this quick tutorial][esp32tutorial] to add the ESP32
   - This specific project used the NodeMCU-32S variant of the ESP32 but make sure to check which ESP32 variant you are using
 
-- Follow [this tutorial][esp32filesystem] to add the [Arduino ESP32 filesystem uploader][esptool_py] plugin tool to the Arduino IDE that lets you add files to the ESP32 using the SPIFFS filesystem:
+- Follow [this additional quick tutorial][esp32filesystem] to add the [Arduino ESP32 filesystem uploader][esptool_py] plugin tool to the Arduino IDE that lets you add files to the ESP32 using the SPIFFS filesystem:
   - Once the tool has been configured, make sure to select **Tools>ESP32 Sketch Data Upload** to upload the `auth.keys` file to the ESP32
 
 - Then, follow this circuit schematic to set up the testing light-sensing circuit.
@@ -94,7 +94,7 @@ To replicate this project, follow these steps:
 [ifttt]: https://ifttt.com/home
 [webhook]: https://ifttt.com/maker_webhooks
 [wemo]: https://ifttt.com/wemo_switch
-[`auth.keys_template`]: /src/data/auth.keys_template
+[`auth.keys_template`]: src/TimeLightClient/data/auth.keys_template
 [esp32tutorial]: https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
 [esp32filesystem]: https://randomnerdtutorials.com/install-esp32-filesystem-uploader-arduino-ide/
 [esptool_py]: https://github.com/me-no-dev/arduino-esp32fs-plugin
