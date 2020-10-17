@@ -6,7 +6,7 @@
 
 ![Project Overview][overview]
 
-The ESP32 Microcontroller measures the light in the living room as well as the corresponding time and sends an HTTP POST request to an IFTTT webhook service that then turns a WeMo Smart Plug on/off. The process is overriden from 11:00pm to 8:00am.
+The ESP32 Microcontroller measures the light in the living room as well as the corresponding time and sends an HTTP POST request to an IFTTT webhook service that then turns a WeMo Smart Plug on/off. The process is overriden from 11:00pm to 9:00am.
 
 ## ESP32 Setup
 

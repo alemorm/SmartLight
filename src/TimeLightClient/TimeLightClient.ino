@@ -52,8 +52,6 @@ const int daylightOffset = 3600;
 /* Finite state variables to prevent redundant triggers */
 // Variable that records last time the lamp was turned on
 int checkonPrevious = 1;
-// Variable that records last time the lamp was turned off
-int checkoffPrevious = 0;
 
 /* Function Initializations */
 // Function that returns time and date info from NTP server
@@ -122,40 +120,24 @@ void loop() {
   // Convert hour value from char to int
   hourVar = atoi(timeHour);
 
-  // Turn off lamp from 11:00pm to 8:00am
-  if ((hourVar >= 23 || hourVar <= 8)) {
+  // Turn off lamp from 11:00pm to 9:00am
+  if ((hourVar >= 23 || hourVar <= 9)) {
     // Check if lamp is off, and if not, turn it off
-    if (checkoffPrevious) {
-      if (debugVar) {
-        // Turn off LED
-        digitalWrite(ledPin, LOW);
-      }
-      checkonPrevious = 1;
-      checkoffPrevious = 0;
-      httpQuery("lamp_off");
+    if (debugVar) {
+      // Turn off LED
+      digitalWrite(ledPin, LOW);
     }
+    checkonPrevious = 1;
+    httpQuery("lamp_off");
   }
-  else {
-    // Turn off lamp when light intensity surpasses a threshold and is not off
-    if (lightAverage > lightIntensity && checkoffPrevious && !checkonPrevious) {
-      if (debugVar) {
-        // Turn off LED
-        digitalWrite(ledPin, LOW);
-      }
-      checkonPrevious = 1;
-      checkoffPrevious = 0;
-      httpQuery("lamp_off");
+  // Turn on lamp when light intensity falls below a threshold and is not on
+  else if (lightAverage <= lightIntensity && checkonPrevious) {
+    if (debugVar) {
+      // Turn on LED
+      digitalWrite(ledPin, HIGH);
     }
-    // Turn on lamp when light intensity falls below a threshold and is not on
-    else if (lightAverage <= lightIntensity && checkonPrevious && !checkoffPrevious) {
-      if (debugVar) {
-        // Turn on LED
-        digitalWrite(ledPin, HIGH);
-      }
-      checkonPrevious = 0;
-      checkoffPrevious = 1;
-      httpQuery("lamp_on");
-    }   
+    checkonPrevious = 0;
+    httpQuery("lamp_on");
   }
 }
 
