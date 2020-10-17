@@ -123,12 +123,14 @@ void loop() {
   // Turn off lamp from 11:00pm to 9:00am
   if ((hourVar >= 23 || hourVar <= 9)) {
     // Check if lamp is off, and if not, turn it off
-    if (debugVar) {
-      // Turn off LED
-      digitalWrite(ledPin, LOW);
+    if (!checkonPrevious) {
+      if (debugVar) {
+        // Turn off LED
+        digitalWrite(ledPin, LOW);
+      }
+      checkonPrevious = 1;
+      httpQuery("lamp_off");
     }
-    checkonPrevious = 1;
-    httpQuery("lamp_off");
   }
   // Turn on lamp when light intensity falls below a threshold and is not on
   else if (lightAverage <= lightIntensity && checkonPrevious) {
