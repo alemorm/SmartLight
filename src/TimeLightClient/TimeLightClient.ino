@@ -37,9 +37,9 @@ const int ledPin = 32;
 // Delay between each light sampling in milliseconds
 int readDelay = 500;
 // Number of light samples per average
-int sampleNum = 600; /*NOTE* 1,000 or more integer array elements cause stack overflow on ESP32 */
+int sampleNum = 300; /*NOTE* 1,000 or more integer array elements cause stack overflow on ESP32 */
 // Light intensity threshold to turn lamp off, it should be calibrated to desired brightness
-int lightIntensity = 350;
+int lightIntensity = 325;
 
 /* Time Server Information */
 // Google's public NTP server
